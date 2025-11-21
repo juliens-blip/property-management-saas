@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run dev:*)",
+      "Bash(cat:*)",
+      "WebSearch",
+      "Bash(npm install:*)",
+      "Bash(npx tailwindcss:*)",
+      "Bash(npm run lint)",
+      "Bash(npm run build:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(timeout /t 5)",
+      "WebFetch(domain:airtable.com)",
+      "WebFetch(domain:stackoverflow.com)",
+      "WebFetch(domain:blog.airproxy.app)",
+      "Bash(mkdir:*)",
+      "Bash(git add:*)",
+      "Bash(gh repo create:*)",
+      "Bash(gh:*)",
+      "Bash(git commit:*)",
+      "Bash(git remote add:*)",
+      "Bash(git push:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

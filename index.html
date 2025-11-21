@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ResidConnect - Portail de Connexion</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            display: flex;
+            max-width: 1200px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .left-panel {
+            flex: 1;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 60px 40px;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+
+        .left-panel h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .left-panel p {
+            font-size: 18px;
+            line-height: 1.6;
+            opacity: 0.95;
+            margin-bottom: 30px;
+        }
+
+        .features {
+            list-style: none;
+            margin-top: 20px;
+        }
+
+        .features li {
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 16px;
+        }
+
+        .features li:last-child {
+            border-bottom: none;
+        }
+
+        .feature-icon {
+            width: 24px;
+            height: 24px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .right-panel {
+            flex: 1;
+            padding: 60px 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .right-panel h2 {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 16px;
+        }
+
+        .user-type-selector {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .user-type-btn {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 600;
+            color: #666;
+        }
+
+        .user-type-btn:hover {
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        .user-type-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: #667eea;
+            color: white;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #666;
+        }
+
+        .remember-me input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .forgot-password {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        .signup-link {
+            text-align: center;
+            margin-top: 25px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .signup-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .signup-link a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 968px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .left-panel {
+                padding: 40px 30px;
+            }
+
+            .left-panel h1 {
+                font-size: 28px;
+            }
+
+            .right-panel {
+                padding: 40px 30px;
+            }
+
+            .features {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .user-type-selector {
+                flex-direction: column;
+            }
+
+            .logo {
+                font-size: 24px;
+            }
+
+            .logo-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="left-panel">
+            <div class="logo">
+                <div class="logo-icon">🏢</div>
+                ResidConnect
+            </div>
+            <h1>Bienvenue sur votre espace résidence</h1>
+            <p>La plateforme qui connecte locataires et professionnels pour une gestion simplifiée de votre résidence.</p>
+            <ul class="features">
+                <li>
+                    <div class="feature-icon">📢</div>
+                    <span>Actualités et annonces en temps réel</span>
+                </li>
+                <li>
+                    <div class="feature-icon">🔧</div>
+                    <span>Gestion des demandes de maintenance</span>
+                </li>
+                <li>
+                    <div class="feature-icon">💬</div>
+                    <span>Communication directe avec les gestionnaires</span>
+                </li>
+                <li>
+                    <div class="feature-icon">📄</div>
+                    <span>Documents et informations importants</span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="right-panel">
+            <h2>Connexion</h2>
+            <p class="subtitle">Accédez à votre espace personnel</p>
+
+            <div class="user-type-selector">
+                <button class="user-type-btn active" id="tenant-btn" onclick="selectUserType('tenant')">
+                    👤 Locataire
+                </button>
+                <button class="user-type-btn" id="professional-btn" onclick="selectUserType('professional')">
+                    💼 Professionnel
+                </button>
+            </div>
+
+            <form id="login-form" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="email">Adresse e-mail</label>
+                    <input type="email" id="email" name="email" placeholder="votre@email.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Mot de passe</label>
+                    <input type="password" id="password" name="password" placeholder="••••••••" required>
+                </div>
+
+                <div class="form-options">
+                    <label class="remember-me">
+                        <input type="checkbox" id="remember">
+                        <span>Se souvenir de moi</span>
+                    </label>
+                    <a href="#" class="forgot-password">Mot de passe oublié ?</a>
+                </div>
+
+                <button type="submit" class="login-btn">Se connecter</button>
+            </form>
+
+            <div class="signup-link">
+                Pas encore de compte ? <a href="#">Créer un compte</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedUserType = 'tenant';
+
+        function selectUserType(type) {
+            selectedUserType = type;
+            const tenantBtn = document.getElementById('tenant-btn');
+            const professionalBtn = document.getElementById('professional-btn');
+
+            if (type === 'tenant') {
+                tenantBtn.classList.add('active');
+                professionalBtn.classList.remove('active');
+            } else {
+                professionalBtn.classList.add('active');
+                tenantBtn.classList.remove('active');
+            }
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const remember = document.getElementById('remember').checked;
+
+            console.log('Tentative de connexion:', {
+                userType: selectedUserType,
+                email: email,
+                remember: remember
+            });
+
+            // Ici vous pourrez ajouter votre logique de connexion
+            alert(`Connexion en tant que ${selectedUserType === 'tenant' ? 'Locataire' : 'Professionnel'}\nEmail: ${email}`);
+        }
+
+        // Animation au chargement
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelector('.container').style.animation = 'fadeIn 0.5s ease-in';
+        });
+    </script>
+</body>
+</html>
