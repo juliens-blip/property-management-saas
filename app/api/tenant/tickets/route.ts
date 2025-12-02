@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getTicketsByTenantEmail, createTicket } from '@/lib/airtable'
+import { getTicketsByTenantEmail, createTicket, mapCategoryToProfessionalType, findProfessionalByType } from '@/lib/airtable'
 import { authenticateRequest } from '@/lib/auth'
 import { ApiResponse, TICKET_FIELDS } from '@/lib/types'
 
@@ -69,8 +69,28 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const body = await request.json()
-    const { title, description, category, priority, unit, images_urls } = body
+    // Gérer FormData (pour fichiers) OU JSON
+    let title, description, category, priority, unit, imageFile
+    const contentType = request.headers.get('content-type')
+
+    if (contentType?.includes('multipart/form-data')) {
+      // Upload avec fichier
+      const formData = await request.formData()
+      title = formData.get('title') as string
+      description = formData.get('description') as string
+      category = formData.get('category') as string
+      priority = formData.get('priority') as string
+      unit = formData.get('unit') as string
+      imageFile = formData.get('image') as File | null
+    } else {
+      // JSON simple (sans fichier)
+      const body = await request.json()
+      title = body.title
+      description = body.description
+      category = body.category
+      priority = body.priority
+      unit = body.unit
+    }
 
     // Validation des champs requis
     if (!title || !description || !category) {
@@ -80,32 +100,62 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // === ASSIGNATION AUTOMATIQUE DU PROFESSIONNEL ===
+    // Mapper la catégorie du ticket vers le type de professionnel
+    const professionalType = mapCategoryToProfessionalType(category)
+    let assignedProfessionalId: string | null = null
+
+    if (professionalType) {
+      const professional = await findProfessionalByType(professionalType)
+      if (professional) {
+        assignedProfessionalId = professional.id
+        console.log(`✅ Professionnel assigné automatiquement: ${professional.fields.name} (${professionalType})`)
+      } else {
+        console.log(`⚠️ Aucun professionnel trouvé pour le type: ${professionalType}`)
+      }
+    }
+
     // Préparer les champs du ticket
     const ticketFields: any = {
       [TICKET_FIELDS.title]: title,
       [TICKET_FIELDS.description]: description,
       [TICKET_FIELDS.category]: category,
       [TICKET_FIELDS.priority]: priority || 'medium',
-      [TICKET_FIELDS.status]: 'open',
+      [TICKET_FIELDS.status]: assignedProfessionalId ? 'assigned' : 'open', // Statut = assigned si professionnel trouvé
       [TICKET_FIELDS.tenant_email]: auth.payload.email,
       [TICKET_FIELDS.unit]: unit || '',
     }
 
-    // === GESTION DES IMAGES - FORMAT STRICT AIRTABLE ===
-    if (images_urls && Array.isArray(images_urls) && images_urls.length > 0) {
-      // Airtable est TRÈS strict: il faut un tableau d'objets {id: "attXXXX"}
-      // Ne pas envoyer l'objet complet, juste l'ID !
-      ticketFields[TICKET_FIELDS.images_urls] = images_urls.map((img: any) => ({
-        id: img.id  // ← CLEF ABSOLUE: c'est ce que Airtable attend
-      }))
-
-      console.log("✅ Images_urls format Airtable:", JSON.stringify(ticketFields[TICKET_FIELDS.images_urls], null, 2))
+    // Assigner le professionnel si trouvé
+    if (assignedProfessionalId) {
+      ticketFields[TICKET_FIELDS.PROFESSIONALS] = [assignedProfessionalId]
     }
 
-    // Debug: afficher le payload complet
-    console.log("🔍 DEBUG - Body reçu:", images_urls)
-    console.log("🔍 DEBUG - ID extrait:", images_urls?.[0]?.id)
-    console.log("🔍 DEBUG - Payload complet à Airtable:", JSON.stringify(ticketFields, null, 2))
+    // === GESTION DES IMAGES - STOCKAGE LOCAL ===
+    if (imageFile) {
+      const { writeFile } = await import('fs/promises')
+      const { join } = await import('path')
+
+      // Générer un nom de fichier unique
+      const timestamp = Date.now()
+      const randomString = Math.random().toString(36).substring(2, 8)
+      const extension = imageFile.name.split('.').pop()
+      const filename = `ticket_${timestamp}_${randomString}.${extension}`
+
+      // Sauvegarder dans /public/uploads/tickets/
+      const bytes = await imageFile.arrayBuffer()
+      const buffer = Buffer.from(bytes)
+      const uploadDir = join(process.cwd(), 'public', 'uploads', 'tickets')
+      const filepath = join(uploadDir, filename)
+
+      await writeFile(filepath, buffer)
+
+      // Stocker l'URL dans Airtable (champ texte)
+      const imageUrl = `/uploads/tickets/${filename}`
+      ticketFields[TICKET_FIELDS.images_urls] = imageUrl
+
+      console.log("✅ Image sauvegardée:", imageUrl)
+    }
 
     // Créer le ticket
     const newTicket = await createTicket(ticketFields)

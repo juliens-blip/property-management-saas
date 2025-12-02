@@ -15,8 +15,6 @@ export default function TicketForm({ userUnit }: TicketFormProps) {
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [previewUrl, setPreviewUrl] = useState<string>('')
-  const [uploadingImage, setUploadingImage] = useState(false)
-  const [uploadedImage, setUploadedImage] = useState<{ id: string; name: string } | null>(null)
   const [imageError, setImageError] = useState<string | null>(null)
 
   const [formData, setFormData] = useState({
@@ -55,46 +53,7 @@ export default function TicketForm({ userUnit }: TicketFormProps) {
     }
   }
 
-  const handleUploadImage = async () => {
-    if (!selectedFile) return
-
-    setUploadingImage(true)
-    setImageError(null)
-
-    try {
-      const uploadFormData = new FormData()
-      uploadFormData.append('file', selectedFile)
-
-      const uploadResponse = await fetch('/api/tenant/tickets/upload', {
-        method: 'POST',
-        body: uploadFormData,
-      })
-
-      const uploadData = await uploadResponse.json()
-
-      if (!uploadData.success) {
-        setImageError(uploadData.error || 'Erreur lors de l\'upload de l\'image')
-        return
-      }
-
-      // Stocker l'attachmentId
-      setUploadedImage({
-        id: uploadData.attachmentId,
-        name: uploadData.fileName
-      })
-
-      // Clear la sélection
-      setSelectedFile(null)
-      setPreviewUrl('')
-    } catch (err) {
-      setImageError('Erreur serveur lors de l\'upload')
-    } finally {
-      setUploadingImage(false)
-    }
-  }
-
   const handleRemoveImage = () => {
-    setUploadedImage(null)
     setSelectedFile(null)
     setPreviewUrl('')
     setImageError(null)
@@ -112,24 +71,36 @@ export default function TicketForm({ userUnit }: TicketFormProps) {
         return
       }
 
-      // Créer le ticket avec l'image uploadée (si présente)
-      const ticketData: any = { ...formData }
+      // Si une image est sélectionnée, envoyer FormData, sinon JSON
+      let response
+      if (selectedFile) {
+        // === UPLOAD AVEC IMAGE - FormData ===
+        const submitFormData = new FormData()
+        submitFormData.append('title', formData.title)
+        submitFormData.append('description', formData.description)
+        submitFormData.append('category', formData.category)
+        submitFormData.append('priority', formData.priority)
+        submitFormData.append('unit', formData.unit)
+        submitFormData.append('image', selectedFile)
 
-      if (uploadedImage) {
-        ticketData.images_urls = [{
-          id: uploadedImage.id,
-          filename: uploadedImage.name
-        }]
+        response = await fetch('/api/tenant/tickets', {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: submitFormData,
+        })
+      } else {
+        // === SANS IMAGE - JSON ===
+        response = await fetch('/api/tenant/tickets', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(formData),
+        })
       }
-
-      const response = await fetch('/api/tenant/tickets', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(ticketData),
-      })
 
       const data = await response.json()
 
@@ -246,51 +217,21 @@ export default function TicketForm({ userUnit }: TicketFormProps) {
           </div>
         )}
 
-        {!uploadedImage && (
-          <>
-            <input
-              type="file"
-              id="image"
-              accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-primary file:text-white hover:file:bg-primary-dark"
-              onChange={handleFileChange}
-            />
-            <p className="text-xs text-gray-500 mt-1">
-              JPG, PNG, GIF ou WebP - Max 10MB
-            </p>
+        <input
+          type="file"
+          id="image"
+          accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-primary file:text-white hover:file:bg-primary-dark"
+          onChange={handleFileChange}
+        />
+        <p className="text-xs text-gray-500 mt-1">
+          JPG, PNG, GIF ou WebP - Max 10MB. L&apos;image sera envoyée lors de la création du ticket.
+        </p>
 
-            {previewUrl && (
-              <div className="mt-4 space-y-3">
-                <p className="text-sm font-medium text-gray-700">Aperçu :</p>
-                <img
-                  src={previewUrl}
-                  alt="Aperçu"
-                  className="max-w-xs rounded-lg border border-gray-300"
-                />
-                <button
-                  type="button"
-                  onClick={handleUploadImage}
-                  disabled={uploadingImage}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {uploadingImage ? 'Upload en cours...' : 'Uploader l\'image'}
-                </button>
-              </div>
-            )}
-          </>
-        )}
-
-        {uploadedImage && (
-          <div className="mt-3 p-4 bg-green-50 border border-green-200 rounded-lg">
+        {previewUrl && (
+          <div className="mt-4 space-y-3">
             <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <svg className="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                </svg>
-                <span className="text-sm font-medium text-green-700">
-                  Image uploadée : {uploadedImage.name}
-                </span>
-              </div>
+              <p className="text-sm font-medium text-gray-700">Aperçu :</p>
               <button
                 type="button"
                 onClick={handleRemoveImage}
@@ -299,6 +240,11 @@ export default function TicketForm({ userUnit }: TicketFormProps) {
                 Supprimer
               </button>
             </div>
+            <img
+              src={previewUrl}
+              alt="Aperçu"
+              className="max-w-xs rounded-lg border border-gray-300"
+            />
           </div>
         )}
       </div>

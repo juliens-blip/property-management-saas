@@ -1,0 +1,17 @@
+{
+  "mcpServers": {
+    "airtable-residconnect": {
+      "command": "C:\\Users\\beatr\\Documents\\property-management-saas\\mcp\\airtable-server\\venv\\Scripts\\python.exe",
+      "args": [
+        "C:\\Users\\beatr\\Documents\\property-management-saas\\mcp\\airtable-server\\main.py"
+      ],
+      "env": {
+        "AIRTABLE_API_TOKEN": "your_airtable_token_here",
+        "AIRTABLE_BASE_ID": "your_base_id_here",
+        "AIRTABLE_API_URL": "https://api.airtable.com/v0",
+        "AIRTABLE_RATE_LIMIT_PER_SEC": "5",
+        "AIRTABLE_REQUEST_TIMEOUT": "30"
+      }
+    }
+  }
+}

@@ -12,6 +12,9 @@ export type TicketStatus = 'open' | 'assigned' | 'in_progress' | 'resolved' | 'c
 
 export type TicketPriority = 'low' | 'medium' | 'high' | 'urgent'
 
+// Message Types
+export type MessageCategory = 'intervention' | 'evenement' | 'general'
+
 // Airtable Field IDs - TENANTS Table
 export const TENANT_FIELDS = {
   email: 'fldg4xlUQGWAMa1vq',
@@ -21,9 +24,11 @@ export const TENANT_FIELDS = {
   first_name: 'fldCjf3UHzuXYax8B',
   last_name: 'fldsGDRvealJ3yZdR',
   residence_name: 'fldEKoG8PUyQLCC37',
+  message: 'fldblRxAfc11wuqdq',      // Champ Text dans Airtable
   status: 'fldK0XdnyBXTOkVfc',
   created_at: 'fldqd2KQ55XMKnF3R',
   TICKETS: 'fldoZAS0voQTlMBvx',
+  RESIDENCES: 'fldXLbic4x3dGUQrL',   // Champ Text dans Airtable
 } as const
 
 // Airtable Field IDs - PROFESSIONALS Table
@@ -47,13 +52,16 @@ export const TICKET_FIELDS = {
   priority: 'fldx5UszT8duxQZyY',
   tenant_email: 'fldZGRcdiXnoNS5OL',
   unit: 'fldRj1kcmJSu4nQQ2',
-  assigned_to: 'fld3bfcdn71PUNPZI',
+  PROFESSIONALS: 'fldoNCHrRuh6zgzax', // Link to PROFESSIONALS table (NOUVEAU CHAMP)
+  'email (from PROFESSIONALS)': 'fldPpPm5WQaw4JMzc', // Lookup field
+  assigned_to: 'fld3bfcdn71PUNPZI', // Deprecated - use PROFESSIONALS instead
   name: 'fld1jLo386MlJgxZr',
   created_at: 'fldDIUilSLOXpLuec',
   updated_at: 'fldwa2gEGI645x9FC',
   resolved_at: 'flddYiLBPnCYtBClV',
   resolution_notes: 'fldOWkLenvlefCm7Q',
   images_urls: 'flduOSxLcMx3dXktM',
+  invoice_url: 'fldoOAr0BjGA947U7',
 } as const
 
 // Airtable Field IDs - RESIDENCES Table
@@ -66,12 +74,26 @@ export const RESIDENCE_FIELDS = {
   TICKETS: 'fldBirnOJrr1ivjUW',
 } as const
 
+// Airtable Field IDs - MESSAGES Table
+// Schéma réel: titre, message, categorie, created_at, TENANTS (link), PROFESSIONALS (link)
+export const MESSAGE_FIELDS = {
+  titre: 'fldgHiPzTjNpqYOGW',
+  message: 'flddnEGi0vpj3tGR3',
+  categorie: 'fldpEomz71o8ClGvr',
+  created_at: 'fldVALw6rlBn1yMae',
+  // Utiliser les NOMS de champs pour les liens (pas les field IDs)
+  TENANTS: 'TENANTS',              // Link to TENANTS table (nom du champ)
+  PROFESSIONALS: 'PROFESSIONALS',   // Link to PROFESSIONALS table (nom du champ)
+  email_from_tenants: 'email (from TENANTS)', // Lookup automatique
+} as const
+
 // Airtable Table IDs
 export const TABLES = {
   TENANTS: 'tbl18r4MzBthXlnth',
   PROFESSIONALS: 'tblIcANCLun1lb2Ap',
   TICKETS: 'tbl2qQrpJc4PC9yfk',
   RESIDENCES: 'tblx32X9SAlBpeB3C',
+  MESSAGES: 'tblvQrZVzdAaxb7Kr',
 } as const
 
 // Interface Definitions
@@ -109,12 +131,15 @@ export interface Ticket {
   priority: TicketPriority
   tenant_email: string
   unit: string
-  assigned_to?: string
+  PROFESSIONALS?: string[] // Array of professional record IDs
+  'email (from PROFESSIONALS)'?: string[] // Lookup: array of emails
+  assigned_to?: string // Deprecated - kept for backward compatibility
   created_at: string
   updated_at?: string
   resolved_at?: string
   resolution_notes?: string
   images_urls?: string
+  invoice_url?: string
 }
 
 export interface Residence {
@@ -124,6 +149,21 @@ export interface Residence {
   agency_email: string
   total_units: number
   created_at?: string
+}
+
+export interface Message {
+  id: string
+  titre: string
+  message: string
+  categorie: MessageCategory
+  created_at: string
+  // Champs Airtable
+  TENANTS?: string[]        // Link to TENANTS (array de record IDs)
+  PROFESSIONALS?: string[]  // Link to PROFESSIONALS (array de record IDs)
+  'email (from TENANTS)'?: string[]  // Lookup automatique depuis TENANTS
+  // Champs enrichis côté API
+  created_by_name?: string  // Enrichi depuis le lookup email
+  residence_name?: string   // Enrichi depuis TENANTS
 }
 
 // API Response Types

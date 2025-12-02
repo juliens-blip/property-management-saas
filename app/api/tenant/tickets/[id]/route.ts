@@ -40,14 +40,8 @@ export async function GET(
       )
     }
 
-    // Vérifier que le ticket appartient bien au tenant connecté
-    const tenantEmail = ticketRecord.fields[TICKET_FIELDS.tenant_email]
-    if (tenantEmail !== auth.payload.email) {
-      return NextResponse.json<ApiResponse>(
-        { success: false, error: 'Accès non autorisé à ce ticket' },
-        { status: 403 }
-      )
-    }
+    // NOTE: Tous les locataires peuvent voir tous les tickets (pas de vérification d'ownership)
+    // Cette logique permet aux locataires de voir les tickets des autres pour la transparence
 
     const ticket = {
       id: ticketRecord.id,

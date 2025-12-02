@@ -135,7 +135,7 @@ export default function ProfessionalTicketsPage() {
         <div className="bg-white rounded-xl shadow-md p-12 text-center">
           <div className="text-6xl mb-4">📭</div>
           <h3 className="text-xl font-semibold text-gray-900 mb-2">Aucun ticket assigné</h3>
-          <p className="text-gray-600">Vous n'avez pas encore de tickets assignés.</p>
+          <p className="text-gray-600">Vous n&apos;avez pas encore de tickets assignés.</p>
         </div>
       ) : (
         <div className="bg-white rounded-xl shadow-md overflow-hidden">

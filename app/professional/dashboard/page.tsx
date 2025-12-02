@@ -33,9 +33,19 @@ export default function ProfessionalDashboard() {
 
       const data = await response.json()
 
+      // DEBUG: Afficher la réponse de l'API
+      console.log('📊 [Dashboard] Réponse API tickets:', {
+        success: data.success,
+        ticketsCount: data.data?.length || 0,
+        tickets: data.data,
+        error: data.error
+      })
+
       if (data.success) {
         setTickets(data.data || [])
+        console.log('✅ [Dashboard] Tickets chargés:', data.data?.length || 0)
       } else {
+        console.error('❌ [Dashboard] Erreur API:', data.error)
         setError(data.error || 'Erreur lors du chargement des tickets')
       }
     } catch (err) {
@@ -65,7 +75,7 @@ export default function ProfessionalDashboard() {
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold text-gray-900">Tableau de bord professionnel</h1>
-        <p className="text-gray-600 mt-1">Vue d'ensemble des tickets assignés</p>
+        <p className="text-gray-600 mt-1">Vue d&apos;ensemble des tickets assignés</p>
       </div>
 
       {error && (
@@ -101,7 +111,7 @@ export default function ProfessionalDashboard() {
               Aucun ticket assigné
             </h3>
             <p className="text-gray-600">
-              Vous n'avez pas encore de tickets assignés.
+              Vous n&apos;avez pas encore de tickets assignés.
             </p>
           </div>
         ) : (

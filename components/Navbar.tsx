@@ -22,6 +22,7 @@ export default function Navbar({ userName, userRole }: NavbarProps) {
 
   const dashboardPath = userRole === 'tenant' ? '/tenant/dashboard' : '/professional/dashboard'
   const ticketsPath = userRole === 'tenant' ? '/tenant/tickets' : '/professional/tickets'
+  const messagesPath = '/tenant/messages'
 
   return (
     <nav className="bg-gradient-to-r from-primary to-primary-dark text-white shadow-lg">
@@ -51,6 +52,14 @@ export default function Navbar({ userName, userRole }: NavbarProps) {
             >
               Tickets
             </Link>
+            {userRole === 'tenant' && (
+              <Link
+                href={messagesPath}
+                className="px-3 py-2 rounded-md text-sm font-medium hover:bg-white/10 transition"
+              >
+                Messages
+              </Link>
+            )}
 
             {/* User Info & Logout */}
             <div className="flex items-center space-x-3 ml-4 pl-4 border-l border-white/30">

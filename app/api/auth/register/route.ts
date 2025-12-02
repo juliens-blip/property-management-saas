@@ -19,6 +19,17 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Validation de la résidence (obligatoire)
+    if (!residence_name || residence_name.trim() === '') {
+      return NextResponse.json<AuthResponse>(
+        {
+          success: false,
+          error: 'La résidence est obligatoire',
+        },
+        { status: 400 }
+      )
+    }
+
     // Vérifier que l'email n'existe pas déjà
     const existingTenant = await findTenantByEmail(email)
     if (existingTenant) {
@@ -42,7 +53,7 @@ export async function POST(request: NextRequest) {
       [TENANT_FIELDS.last_name]: last_name,
       [TENANT_FIELDS.unit]: unit || '',
       [TENANT_FIELDS.phone]: phone || '',
-      [TENANT_FIELDS.residence_name]: residence_name || '',
+      [TENANT_FIELDS.residence_name]: residence_name.trim(),
       [TENANT_FIELDS.status]: 'active',
       // created_at est un champ calculé automatique dans Airtable, on ne l'envoie pas
     })

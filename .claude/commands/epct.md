@@ -183,3 +183,63 @@ Provide a comprehensive summary:
 7. **Fix all test failures** - Don't mark the workflow complete until tests pass
 
 Begin Phase 1: EXPLORE now.
+
+## Context7 MCP Integration
+
+**Always enabled for this workflow.**
+
+Context7 MCP provides up-to-date, version-specific documentation for:
+- Next.js 14 and React 18+
+- Airtable API (latest endpoints and formats)
+- TypeScript strict mode
+- Node.js and npm packages
+- All project dependencies
+
+### How it works:
+1. When generating code, Context7 automatically fetches official docs
+2. Documentation is injected into Claude Code's context
+3. Generated code uses current APIs, not outdated training data
+4. Reduces hallucinations and bugs
+
+### When to use explicitly:
+If Claude Code doesn't auto-invoke Context7, add to your prompt:
+```
+use context7
+```
+
+### Supported Libraries:
+```
+Frontend: Next.js, React, TypeScript, Tailwind CSS, React Router
+Backend: Node.js, Airtable API, bcryptjs, JWT
+Dev: npm, Vercel, GitHub
+```
+
+This ensures every EPCT workflow uses current documentation.
+
+---
+
+## Airtable Schema Quick Reference
+
+For ResidConnect project, the following tables are available:
+
+**TENANTS**: `tbl18r4MzBthXlnth`
+**PROFESSIONALS**: `tblIcANCLun1lb2Ap`
+**TICKETS**: `tbl2qQrpJc4PC9yfk`
+**RESIDENCES**: `tblx32X9SAlBpeB3C`
+**MESSAGES**: `tblvQrZVzdAaxb7Kr`
+- titre du message: `fldgHiPzTjNpqYOGW` (Text)
+- message: `flddnEGi0vpj3tGR3` (Long Text)
+- categorie: `fldpEomz71o8ClGvr` (Single Select: intervention/evenement/general)
+- TENANTS: `fldlmSdHe0ENnaA7Q` (Link to another record)
+- PROFESSIONALS: `fldqIic59UdS0KdF1` (Link to another record)
+- Date de création: `fldVALw6rlBn1yMae` (Created time)
+
+Complete field IDs and schema available in CLAUDE.md file.
+
+---
+
+## Available MCP Tools
+
+**MCP Diagnostic:** [.claude/agents/mcp-doctor.md](.claude/agents/mcp-doctor.md)
+- `/mcp-check` - Diagnostic des serveurs MCP
+- `/mcp-fix` - Réparation automatique MCP

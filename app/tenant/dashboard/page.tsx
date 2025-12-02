@@ -66,7 +66,7 @@ export default function TenantDashboard() {
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Tableau de bord</h1>
-          <p className="text-gray-600 mt-1">Vue d'ensemble de vos demandes</p>
+          <p className="text-gray-600 mt-1">Vue d&apos;ensemble de vos demandes</p>
         </div>
         <Link
           href="/tenant/tickets/new"

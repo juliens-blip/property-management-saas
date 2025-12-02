@@ -25,8 +25,14 @@ export async function GET(request: NextRequest) {
       )
     }
 
+    // DEBUG: Afficher l'email du professionnel authentifié
+    console.log('🔐 [API Professional/Tickets] Email du professionnel:', auth.payload.email)
+    console.log('🔐 [API Professional/Tickets] Role:', auth.payload.role)
+
     // Récupérer les tickets assignés au professional
     const ticketsRecords = await getTicketsByAssignedTo(auth.payload.email)
+
+    console.log('📊 [API Professional/Tickets] Tickets trouvés:', ticketsRecords.length)
 
     // Formater les données
     const tickets = ticketsRecords.map((record) => ({

@@ -1,0 +1,14 @@
+# Airtable MCP Server Dependencies
+
+# MCP SDK
+mcp>=0.9.0
+
+# HTTP client
+httpx>=0.25.0
+
+# Data validation
+pydantic>=2.5.0
+pydantic-settings>=2.1.0
+
+# Async support
+asyncio-throttle>=1.0.2

@@ -38,3 +38,14 @@ next-env.d.ts
 
 # uploads
 /public/uploads/
+
+# python (MCP servers)
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+ENV/
+env/
+*.log

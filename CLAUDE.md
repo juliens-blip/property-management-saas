@@ -111,6 +111,17 @@ SMTP_PASS=xxx
 | resolution_notes | `fldOWkLenvlefCm7Q` | Long Text |
 | images_urls | `flduOSxLcMx3dXktM` | Text (comma-separated URLs) |
 
+### Table 6: MESSAGES
+| Table ID | `tblvQrZVzdAaxb7Kr` |
+|----------|-------------------|
+| **Field** | **Field ID** | **Type** |
+| titre du message | `fldgHiPzTjNpqYOGW` | Text |
+| message | `flddnEGi0vpj3tGR3` | Long Text |
+| categorie | `fldpEomz71o8ClGvr` | Single Select (intervention/evenement/general) |
+| TENANTS | `fldlmSdHe0ENnaA7Q` | Link to another record |
+| PROFESSIONALS | `fldqIic59UdS0KdF1` | Link to another record |
+| Date de création | `fldVALw6rlBn1yMae` | Created time |
+
 ---
 
 ## 🛣️ API ENDPOINTS REFERENCE
@@ -354,3 +365,433 @@ Toujours faire des tests avec les vraies données airtables
 - Verify user has proper access permissions
 - Check record exists in Airtable first
 - Validate API response in browser DevTools Network tab
+
+---
+
+## 🤖 AGENT MCP-CREATOR
+
+### Vue d'ensemble
+
+L'agent **mcp-creator** est un agent spécialisé dans la création complète de serveurs Model Context Protocol (MCP) pour Claude Code. Il produit des serveurs production-ready avec validation Pydantic/Zod, error handling robuste, et documentation exhaustive.
+
+**Fichier:** `.claude/agents/mcp-creator.md` (658 lignes)
+
+### Utilisation Rapide
+
+```bash
+# Commande slash (recommandé)
+/mcp créer un serveur pour intégrer Gmail avec recherche et envoi d'emails
+
+# Mention directe
+@mcp-creator Je veux créer un serveur MCP pour...
+```
+
+### Capacités
+
+- ✅ Création serveurs MCP complets (Python/TypeScript)
+- ✅ Architecture optimale avec diagrammes ASCII
+- ✅ Validation Pydantic/Zod stricte
+- ✅ Error handling + logging robustes
+- ✅ Configuration Claude Desktop automatique
+- ✅ Documentation complète avec exemples
+- ✅ Consultation docs officielles MCP en temps réel
+
+### Processus en 6 Phases
+
+```
+Phase 1: DISCOVERY (2-3 min)
+  → Pose 5-7 questions pour comprendre le besoin
+
+Phase 2: ARCHITECTURE (2-3 min)
+  → Propose architecture + tech stack + diagramme
+
+Phase 3: SCAFFOLDING (1-2 min)
+  → Crée structure fichiers + requirements/package.json
+
+Phase 4: IMPLÉMENTATION (5-10 min)
+  → Code handlers avec type hints + error handling + logging
+
+Phase 5: INTÉGRATION (2-3 min)
+  → Configure Claude Desktop + tests
+
+Phase 6: OPTIMISATION (1-2 min)
+  → Ajoute caching + finalise documentation
+
+Durée totale: 13-23 minutes selon complexité
+```
+
+### Exemples d'Utilisation
+
+**Exemple Simple:**
+```bash
+/mcp créer un serveur pour l'API OpenWeather avec recherche météo par ville
+```
+
+**Exemple Avancé (ResidConnect):**
+```bash
+/mcp créer un serveur MCP pour ResidConnect avec:
+- CRUD sur tickets via Airtable API
+- Notifications locataires par email
+- Recherche tickets par status/priorité/date
+- Cache Redis des requêtes fréquentes
+- Intégration avec MCP Airtable existant
+- Rate limiting 10 req/sec
+```
+
+**Exemple Extension:**
+```bash
+@mcp-creator Ajoute une fonction de recherche full-text au MCP Airtable existant avec filtres avancés
+```
+
+### Standards de Qualité
+
+**Code:**
+- Type hints complets (Python) ou TypeScript strict
+- Docstrings détaillées (Google/NumPy style)
+- Error handling avec logging approprié
+- Async/await pour toutes les I/O
+- Variables d'environnement pour secrets
+- 0 TODO/FIXME dans le code livré
+
+**Configuration:**
+- JSON valide et correctement indenté
+- Chemins absolus pour tous les exécutables
+- Versions de dépendances fixées
+- .env.example complet
+
+**Documentation:**
+- README.md avec instructions setup pas-à-pas
+- Exemples d'utilisation concrets
+- Guide troubleshooting
+- Architecture expliquée avec diagrammes
+
+### Livrables
+
+Après exécution, l'agent fournit:
+
+1. **Code complet** (copy-paste ready)
+   - Tous les fichiers Python/TypeScript
+   - Type hints et docstrings complets
+   - Error handling robuste
+
+2. **Configurations**
+   - `claude_desktop_config.json` valide
+   - `.env.example` avec toutes les variables
+   - `requirements.txt` ou `package.json`
+
+3. **Documentation**
+   - README.md complet
+   - Instructions setup pas-à-pas
+   - Exemples d'utilisation
+   - Guide troubleshooting
+
+4. **Architecture**
+   - Diagrammes ASCII
+   - Explication des choix techniques
+   - Plan d'évolution
+
+### Ressources Consultées
+
+L'agent a accès automatique à:
+- https://code.claude.com/docs/fr/mcp (Doc officielle Claude Code)
+- https://modelcontextprotocol.io/docs (Doc MCP officielle)
+- https://www.anthropic.com/learn/build-with-claude
+- https://apidog.com/fr/blog (Tutoriels FR)
+- https://www.cometapi.com (Exemples)
+
+### Tips pour de Meilleurs Résultats
+
+**Soyez spécifique:**
+- ❌ Vague: "Crée un MCP pour email"
+- ✅ Spécifique: "Crée un MCP Gmail avec recherche par date/expéditeur, envoi d'emails, et lecture des 50 derniers emails"
+
+**Mentionnez les contraintes:**
+```bash
+/mcp serveur Notion avec:
+- Python 3.11+
+- Cache Redis requis
+- OAuth2 authentication
+- Intégration avec MCP Airtable existant
+```
+
+**Précisez les opérations:**
+```bash
+/mcp serveur Todoist avec:
+- CREATE: nouvelles tâches
+- READ: tâches par projet/tag/date
+- UPDATE: modifier tâches existantes
+- DELETE: supprimer tâches
+- SEARCH: recherche full-text
+```
+
+### Commandes Utiles
+
+```bash
+# Lister tous les MCPs installés
+claude mcp list
+
+# Ajouter un nouveau MCP
+claude mcp add /path/to/mcp
+
+# Supprimer un MCP
+claude mcp remove mcp-name
+
+# Tester un MCP Python
+python mcp/your_server/main.py
+```
+
+### Configuration Requise
+
+Les permissions suivantes sont configurées dans `.claude/settings.local.json`:
+- `WebFetch(domain:modelcontextprotocol.io)`
+- `WebFetch(domain:code.claude.com)`
+- `WebFetch(domain:anthropic.com)`
+- `WebFetch(domain:apidog.com)`
+- `WebFetch(domain:cometapi.com)`
+- `Bash(claude mcp add:*)`
+- `Bash(claude mcp list:*)`
+- `Bash(claude mcp remove:*)`
+
+### Outils Disponibles
+
+L'agent mcp-creator a accès à:
+- **Read, Write, Edit** - Gestion des fichiers
+- **Bash** - Installation dépendances et tests
+- **Grep, Glob** - Exploration du projet
+- **WebFetch** - Consultation documentation
+- **WebSearch** - Recherche patterns récents
+
+---
+
+## 🔧 AGENT MCP-DOCTOR
+
+### Vue d'ensemble
+
+L'agent **mcp-doctor** est un agent spécialisé dans le diagnostic, debugging et réparation de serveurs Model Context Protocol (MCP). Il identifie les problèmes de configuration, dépendances, connectivité et propose des solutions automatiques.
+
+**Fichier:** `.claude/agents/mcp-doctor.md` (800+ lignes)
+
+### Utilisation Rapide
+
+```bash
+# Diagnostic complet d'un MCP
+/mcp-check nom-du-mcp
+
+# Diagnostic de tous les MCPs
+/mcp-check
+
+# Réparation automatique
+/mcp-fix nom-du-mcp
+```
+
+### Capacités
+
+- ✅ Diagnostic complet (config, dépendances, connectivité)
+- ✅ Détection erreurs courantes (chemins, timeouts, validation)
+- ✅ Consultation documentation officielle en temps réel
+- ✅ Utilisation MCP Context7 (recherche doc)
+- ✅ Utilisation MCP Gemini (recherche web solutions)
+- ✅ Réparation automatique des problèmes standards
+- ✅ Rapport détaillé avec recommandations
+- ✅ Tests de validation post-correction
+
+### Processus en 5 Phases
+
+```
+Phase 1: DISCOVERY & TRIAGE (1-2 min)
+  → Identifie le MCP et les symptômes
+  → Liste MCPs installés (claude mcp list)
+  → Recherche problèmes connus (GitHub issues)
+
+Phase 2: INSPECTION SYSTÈME (2-3 min)
+  → Vérifie configuration Claude Desktop
+  → Lit fichiers sources et dépendances
+  → Teste chemins et permissions
+
+Phase 3: ANALYSE & DIAGNOSTIC (3-5 min)
+  → Checklist complète (config, code, env, handlers)
+  → Consultation doc officielle MCP
+  → Recherche solutions avec Context7 + Gemini
+
+Phase 4: SOLUTION & RÉPARATION (3-10 min)
+  → Propose corrections priorisées
+  → Applique réparations (avec validation)
+  → Teste après chaque correction
+
+Phase 5: VALIDATION & RAPPORT (1-2 min)
+  → Vérifie "claude mcp list" (Connected)
+  → Teste handlers critiques
+  → Génère rapport complet
+
+Durée totale: 10-22 minutes selon complexité
+```
+
+### Exemples d'Utilisation
+
+**Exemple Simple:**
+```bash
+# MCP ne se connecte pas
+/mcp-check airtable
+```
+
+**Exemple Diagnostic Général:**
+```bash
+# Vérifier tous les MCPs
+/mcp-check
+```
+
+**Exemple Réparation:**
+```bash
+# Réparer automatiquement les problèmes standards
+/mcp-fix airtable
+```
+
+### Problèmes Détectés Automatiquement
+
+**Configuration:**
+- ❌ JSON invalide dans claude_desktop_config.json
+- ❌ Chemins relatifs au lieu d'absolus
+- ❌ Command/args incorrects
+- ❌ Variables d'environnement manquantes
+
+**Dépendances:**
+- ❌ Modules Python/Node manquants
+- ❌ Versions incompatibles
+- ❌ Conflits de versions
+
+**Code & Handlers:**
+- ❌ Erreurs de syntaxe
+- ❌ Type hints Pydantic invalides
+- ❌ Handlers mal définis
+- ❌ Imports manquants
+
+**Connectivité:**
+- ❌ Timeouts
+- ❌ MCP ne répond pas
+- ❌ Rate limiting mal configuré
+
+### Format de Rapport
+
+Chaque diagnostic génère un rapport structuré:
+
+```markdown
+🔍 RÉSUMÉ EXÉCUTIF
+  Status: ✅ Connecté | ⚠️ Dégradé | ❌ Déconnecté
+  Problèmes: X critiques, Y warnings
+
+✅ CHECKS SYSTÈME
+  Configuration: [résultats]
+  Dépendances: [résultats]
+  Fichiers: [résultats]
+  Handlers: [résultats]
+  Connectivité: [résultats]
+
+🐛 PROBLÈMES DÉTECTÉS
+  [CRITIQUE] Problème 1
+  [WARNING] Problème 2
+  [INFO] Problème 3
+
+🔧 SOLUTIONS PROPOSÉES
+  Solution 1 (PRIORITÉ HAUTE)
+  Solution 2 (PRIORITÉ MOYENNE)
+
+📊 ACTIONS EFFECTUÉES
+  ✅ Corrections appliquées
+  ⏭️ Actions nécessitant validation
+
+🧪 TESTS DE VALIDATION
+  ✅ Tests réussis
+  ❌ Tests échoués
+
+💡 RECOMMANDATIONS
+  Court terme, Moyen terme, Long terme
+```
+
+### Ressources Consultées
+
+L'agent a accès automatique à:
+- https://code.claude.com/docs/fr/mcp (Doc Claude Code FR)
+- https://modelcontextprotocol.io/docs/tools/debugging (Debugging officiel)
+- https://modelcontextprotocol.io/docs/tools/inspector (MCP Inspector)
+- https://modelcontextprotocol.io/docs/develop/connect-local-servers (Local servers)
+- https://modelcontextprotocol.io/docs/develop/build-server (Build servers)
+- https://www.cometapi.com/fr/create-a-mcp-server-for-claude-code/ (CometAPI FR)
+- https://github.com/anthropics/claude-code/issues/72 (Known issues)
+
+**MCPs utilisés:**
+- **Context7** - Recherche dans documentation MCP
+- **Gemini** - Recherche web de solutions
+
+### Différence avec /mcp (mcp-creator)
+
+| Aspect | /mcp (mcp-creator) | /mcp-check (mcp-doctor) |
+|--------|-------------------|------------------------|
+| **Objectif** | Créer un nouveau MCP | Diagnostiquer/Réparer MCP existant |
+| **Input** | Description du besoin | Nom du MCP ou symptômes |
+| **Output** | Code + Config + Docs | Rapport diagnostic + Corrections |
+| **Durée** | 13-23 min | 10-22 min |
+| **Mode** | Création | Maintenance |
+
+### Commandes Disponibles
+
+```bash
+# Lister tous les MCPs et leur status
+claude mcp list
+
+# Diagnostic complet
+/mcp-check [nom-du-mcp]
+
+# Réparation automatique
+/mcp-fix nom-du-mcp
+
+# Tester un MCP manuellement
+python path/to/mcp/main.py  # Python
+node path/to/mcp/server.js  # Node.js
+```
+
+### Configuration Requise
+
+Permissions configurées dans `.claude/settings.local.json`:
+- `SlashCommand(/mcp-check:*)`
+- `SlashCommand(/mcp-fix:*)`
+- `Bash(claude mcp list:*)`
+- `Bash(claude mcp install:*)`
+- `WebFetch(domain:modelcontextprotocol.io)`
+- `WebFetch(domain:code.claude.com)`
+- `WebFetch(domain:cometapi.com/fr)`
+- `WebFetch(domain:github.com)`
+
+### Outils Disponibles
+
+L'agent mcp-doctor a accès à:
+- **MCP Context7** - Recherche dans doc MCP officielle
+- **MCP Gemini** - Recherche web de solutions
+- **Read, Write, Edit** - Analyse et correction fichiers
+- **Bash** - Tests et validation
+- **Grep, Glob** - Exploration projet
+- **WebFetch** - Consultation docs officielles
+
+### Tips pour de Meilleurs Diagnostics
+
+**Fournir le contexte:**
+```bash
+# ❌ Vague
+/mcp-check mon-mcp
+
+# ✅ Spécifique avec symptômes
+/mcp-check airtable
+Message d'erreur: "TypeError: 'NoneType' object is not subscriptable"
+Depuis hier après mise à jour Python
+```
+
+**Logs disponibles:**
+```bash
+# Si vous avez des logs, mentionnez-les
+/mcp-check gemini
+Le MCP démarre mais timeout après 30s
+Logs dans C:\Users\user\mcp\logs\error.log
+```
+
+**Quand utiliser /mcp-check vs /mcp-fix:**
+- `/mcp-check` - Pour comprendre le problème en détail
+- `/mcp-fix` - Pour réparer rapidement les problèmes standards
