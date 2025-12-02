@@ -85,8 +85,7 @@ export async function getRecords<T = any>(
     if (tableId === TABLES.TICKETS && data.records.length > 0) {
       console.log('🎫 [getRecords] Premier ticket:', {
         id: data.records[0].id,
-        title: data.records[0].fields.title,
-        PROFESSIONALS: data.records[0].fields.PROFESSIONALS
+        fields: data.records[0].fields
       })
     }
 
